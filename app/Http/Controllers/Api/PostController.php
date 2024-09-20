@@ -8,9 +8,13 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    use ApiResponseTrait;
+
     public function index(){
         // return "Hello";
         $posts = Post::get();
-        return $posts;
+        
+        return $this->ApiResponce($posts, 200, 'get data is succussfuly');
+
     }
 }
