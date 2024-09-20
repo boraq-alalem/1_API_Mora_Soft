@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,7 @@ class PostController extends Controller
 
     public function index(){
 
-        $posts = Post::get();        
+        $posts = PostResource::collection(Post::get());        
         return $this->ApiResponce($posts, 200, 'get data is succussfuly');
         
     }
@@ -20,10 +21,9 @@ class PostController extends Controller
     public function show($id){
         $post = Post::find($id);
         if($post){
-            return $this->ApiResponce($post, 200, 'get data is succussfuly');
+            return $this->ApiResponce(new PostResource($post), 200, 'get data is succussfuly');
         }else{
             return $this->ApiResponce('', 401, 'the post is not fuond,🤦‍♂️');
         }
-        // return $this->ApiResponce($post, 200, 'get data is succussfuly');
     }
 }
