@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -29,14 +30,19 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|unique:posts|max:255',
+            'body' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->ApiResponce('', 400, $validator->errors());
+        }
+
         $post = Post::create([
             'title' => $request->title,
             'body' => $request->body,
         ]);
-
-        if ($post) {
-            return $this->ApiResponce(new PostResource($post), 201, ' data stored succussfuly');
-        }
-        return $this->ApiResponce('', 400, 'the post is not fuond,🤦‍♂️');
+        return $this->ApiResponce(new PostResource($post), 201, ' data stored succussfuly');
     }
 }
