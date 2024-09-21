@@ -11,19 +11,32 @@ class PostController extends Controller
 {
     use ApiResponseTrait;
 
-    public function index(){
+    public function index()
+    {
 
-        $posts = PostResource::collection(Post::get());        
+        $posts = PostResource::collection(Post::get());
         return $this->ApiResponce($posts, 200, 'get data is succussfuly');
-        
     }
-    
-    public function show($id){
+
+    public function show($id)
+    {
         $post = Post::find($id);
-        if($post){
+        if ($post) {
             return $this->ApiResponce(new PostResource($post), 200, 'get data is succussfuly');
-        }else{
-            return $this->ApiResponce('', 401, 'the post is not fuond,🤦‍♂️');
         }
+        return $this->ApiResponce('', 401, 'the post is not fuond,🤦‍♂️');
+    }
+
+    public function store(Request $request)
+    {
+        $post = Post::create([
+            'title' => $request->title,
+            'body' => $request->body,
+        ]);
+
+        if ($post) {
+            return $this->ApiResponce(new PostResource($post), 201, ' data stored succussfuly');
+        }
+        return $this->ApiResponce('', 400, 'the post is not fuond,🤦‍♂️');
     }
 }

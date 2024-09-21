@@ -19,6 +19,7 @@ class PostResource extends JsonResource
         return [
             "#"=>$this->id,
             "Label"=>$this->title,
+            "Content"=>$this->body,
         ];
     }
 }
