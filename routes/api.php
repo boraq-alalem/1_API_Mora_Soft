@@ -23,4 +23,6 @@ Route::controller(PostController::class)->group(function(){
     Route::get('posts','index');
     Route::get('posts/{id}','show')->name('posts.show');
     Route::post('posts/store','store')->name('posts.store');
+    Route::post('posts/update/{id}', 'update')->name('posts.update');
+    Route::post('posts/delete/{id}', 'delete')->name('posts.delete');
 });

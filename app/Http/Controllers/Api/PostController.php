@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -29,6 +30,15 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|unique:posts|max:255',
+            'body' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->ApiResponce($validator->errors(), 401, 'check the error below,🤦‍♂️');
+        }
+
         $post = Post::create([
             'title' => $request->title,
             'body' => $request->body,
@@ -38,5 +48,39 @@ class PostController extends Controller
             return $this->ApiResponce(new PostResource($post), 201, ' data stored succussfuly');
         }
         return $this->ApiResponce('', 400, 'the post is not fuond,🤦‍♂️');
+    }
+
+    public function update(Request $request, $id){
+
+        $post = Post::find($id);
+
+        if(!$post){
+            return $this->ApiResponce('', 401, 'the post is not fuond,🤦‍♂️');
+        }
+
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|unique:posts|max:255',
+            'body' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->ApiResponce($validator->errors(), 401, 'check the error below,🤦‍♂️');
+        }
+
+        $post->update($request->all());
+
+        return $this->ApiResponce(new PostResource($post), 200, 'data updated succussfuly');
+
+
+    }
+
+    public function delete($id){
+        $post = Post::find($id);
+        if(!$post){
+            return $this->ApiResponce('', 401, 'the post is not fuond,🤦‍♂️');
+        }
+        $post->delete($id);
+        return $this->ApiResponce(new PostResource($post), 200, 'data deleted succussfuly');
+
     }
 }
