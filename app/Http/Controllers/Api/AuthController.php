@@ -19,10 +19,22 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
+        // $request->validate([
+        //     'email' => 'required|string|email',
+        //     'password' => 'required|string',
+        // ]);
+
+        $validator = Validator::make($request->all(), [
+            // 'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string|min:6',
         ]);
+
+        if ($validator->fails()) {
+            return $this->ApiResponce($validator->errors(), 401, 'check the error below,🤦‍♂️');
+        }
+
+
         $credentials = $request->only('email', 'password');
 
         $token = Auth::attempt($credentials);
@@ -62,7 +74,6 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return $this->ApiResponce($validator->errors(), 401, 'check the error below,🤦‍♂️');
-            // return response()->json($validator->errors()->toJson(), 400);
         }
 
         $user = User::create([

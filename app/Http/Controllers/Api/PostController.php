@@ -12,8 +12,18 @@ class PostController extends Controller
 {
     use ApiResponseTrait;
 
-    public function index()
+
+
+    public function index(Request $request)
     {
+
+        // $validator = Validator::make($request->all(), [
+        //     'token' => 'required',
+        // ]);
+
+        // if ($validator->fails()) {
+        //     return $this->ApiResponce($validator->errors(), 401, 'check the error below,🤦‍♂️');
+        // }
 
         $posts = PostResource::collection(Post::get());
         return $this->ApiResponce($posts, 200, 'get data is succussfuly');
@@ -46,11 +56,12 @@ class PostController extends Controller
         return $this->ApiResponce(new PostResource($post), 201, ' data stored succussfuly');
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
 
         $post = Post::find($id);
 
-        if(!$post){
+        if (!$post) {
             return $this->ApiResponce('', 401, 'the post is not fuond,🤦‍♂️');
         }
 
@@ -66,17 +77,15 @@ class PostController extends Controller
         $post->update($request->all());
 
         return $this->ApiResponce(new PostResource($post), 200, 'data updated succussfuly');
-
-
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         $post = Post::find($id);
-        if(!$post){
+        if (!$post) {
             return $this->ApiResponce('', 401, 'the post is not fuond,🤦‍♂️');
         }
         $post->delete($id);
         return $this->ApiResponce(new PostResource($post), 200, 'data deleted succussfuly');
-
     }
 }
