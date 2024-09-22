@@ -37,7 +37,6 @@ class PostController extends Controller
 
         if ($validator->fails()) {
             return $this->ApiResponce($validator->errors(), 401, 'check the error below,🤦‍♂️');
-            return $this->ApiResponce('', 400, $validator->errors());
         }
 
         $post = Post::create([
