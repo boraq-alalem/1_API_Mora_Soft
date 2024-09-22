@@ -37,17 +37,14 @@ class PostController extends Controller
 
         if ($validator->fails()) {
             return $this->ApiResponce($validator->errors(), 401, 'check the error below,🤦‍♂️');
+            return $this->ApiResponce('', 400, $validator->errors());
         }
 
         $post = Post::create([
             'title' => $request->title,
             'body' => $request->body,
         ]);
-
-        if ($post) {
-            return $this->ApiResponce(new PostResource($post), 201, ' data stored succussfuly');
-        }
-        return $this->ApiResponce('', 400, 'the post is not fuond,🤦‍♂️');
+        return $this->ApiResponce(new PostResource($post), 201, ' data stored succussfuly');
     }
 
     public function update(Request $request, $id){
